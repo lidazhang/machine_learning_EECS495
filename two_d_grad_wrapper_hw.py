@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # two_d_grad_wrapper_hw is a toy wrapper to illustrate the path
  # taken by gradient descent depending on the learning rate (alpha) chosen.
  # Here alpha is kept fixed and chosen by the use. The corresponding
@@ -11,9 +13,16 @@
  # This file is associated with the book
  # "Machine Learning Refined", Cambridge University Press, 2016.
  # by Jeremy Watt, Reza Borhani, and Aggelos Katsaggelos.
-
+#======================================================================
+#
+# Modified by Stephanie Chang
+# 4/9/2017
+#
+#======================================================================
 from pylab import *
 from mpl_toolkits.mplot3d import Axes3D
+from math import pi
+from numpy import dot, linalg, asarray, meshgrid, reshape, concatenate, array,size, ones, cos, sin
 
 ###### ML Algorithm functions ######
 def gradient_descent(w0,alpha):
@@ -29,7 +38,7 @@ def gradient_descent(w0,alpha):
     max_its = 50
     while linalg.norm(grad) > 10**(-5) and iter <= max_its:
         # take gradient step
-# --->  grad =
+        grad = 4*pi*sin(2*pi*dot(w.T,w))*w + 2*w
         w = w - alpha*grad
 
         # update path containers
@@ -45,7 +54,6 @@ def gradient_descent(w0,alpha):
     s = dot(grad.T,grad)/2
     s = 'The final average norm of the gradient = ' + str(float(s))
     print(s)
-
 
     # # for use in testing if algorithm minimizing/converging properly
     # plot(asarray(obj_path))
@@ -63,7 +71,7 @@ def make_function():
     s = reshape(s,(size(s),1))
     t = reshape(t,(size(t),1))
     h = concatenate((s,t),1)
-    h = dot(h*h,ones((2,1)))
+    h = dot(h*h,ones((2,1))) #9000x1 vector
     b = -cos(2*pi*h) + 2*h
     s = reshape(s,(sqrt(size(s)),sqrt(size(s))))
     t = reshape(t,(sqrt(size(t)),sqrt(size(t))))
@@ -91,7 +99,6 @@ def plot_steps(w_path,g_path):
     ax1.plot(w_path[:,0],w_path[:,1],g_path[:,0],color = [1,0,1],linewidth = 5)   # add a little to output path so its visible on top of the surface plot
     ax1.plot(w_path[-8:-1,0],w_path[-8:-1,1],g_path[-8:-1,0],color = [1,0,0],linewidth = 5)   # add a little to output path so its visible on top of the surface plot
 
-
 def main():
     make_function()                             # plot objective function
 
@@ -108,4 +115,6 @@ def main():
     w_path,g_path = gradient_descent(w0,alpha)    # perform gradient descent
     plot_steps(w_path,g_path)
     show()
-main()
+
+if __name__ == '__main__':
+    main()
