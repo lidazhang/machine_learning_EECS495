@@ -24,5 +24,15 @@ wstar = wstartilde(2);
 x_new = 2050;
 debt_new = bstar + x_new'*wstar
 
+% Plotting linear model and actual data  
+debt_fit = bstar*ones([40, 1]) + wstar.*year;
+fit_line = plot(year, debt_fit, 'r')
+hold on
+
+given_data = scatter(year, debt, 'filled', 'b')
+hold on
+title('Student Debt vs. Year')
+xlabel('Year')
+ylabel('Student Debt (Trillions)')
 end
 
