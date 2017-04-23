@@ -1,4 +1,7 @@
-function softmax_grad_demo_hw()
+function prob4_3c()
+% Modified by Stephanie Chang
+% Problem 4.3c
+%
 % softmax_grad_demo_hw - when complete reproduces Figure 4.3 from Chapter 4
 % of the text
 
@@ -24,16 +27,17 @@ function w = softmax_gradient_descent(X,y)
     iter = 1;
     max_its = 30000;
     grad = 1;
+    
     N = size(X,1);  %3
-    P = size(X,2);
+    P = size(X,2);  %100
+
     while  norm(grad) > 10^-12 && iter < max_its
         % compute gradient
-        inside = (X'*w).*(-y); % 100x1 matrix of -ypXp'w
-        sigma = 1./(ones(P,1)+exp(inside));
-        r = -(sigma).*y;
+        sig_in = (X'*w).*(y); % 100x1 matrix of ypXp'w
+        sigma = 1./(ones(P,1)+exp(sig_in));
+        r = -(sigma).*y; %100x1
         grad = X*r;           % YOUR CODE GOES HERE
         w = w - alpha*grad;
-
         % update iteration count
         iter = iter + 1;
     end
@@ -53,7 +57,7 @@ function plot_all(X,y,w)
     hold on
 
     % plot separator
-    s = [0:0.01:1];
+    s = [0:0.01:1 ];
     plot (s,(-w(1)-w(2)*s)/w(3),'m','linewidth',2);
     
     % clean up plot and add info labels
