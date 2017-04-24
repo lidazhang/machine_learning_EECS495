@@ -1,6 +1,6 @@
 function prob4_9()
 % Modified by Stephanie Chang
-% Problem 4.3c
+% Problem 4.9
 %
 % softmax_grad_demo_hw - when complete reproduces Figure 4.3 from Chapter 4
 % of the text
@@ -10,9 +10,10 @@ function prob4_9()
 
 %%% run gradient descent 
 [w,error_log] = softmax_newton(X,y);
+[wn,archive] = sqr_margin_newton(X,y);
 
 %%% plot everything, pts and lines %%%
-plot_all(X',y,w,error_log);
+plot_all(X',y,w,error_log,archive);
 
 
 %%%%%%%%%%%%%%%%% functions %%%%%%%%%%%%%%%
@@ -20,96 +21,88 @@ plot_all(X',y,w,error_log);
 function [w,error_log] = softmax_newton(X,y)
     %%% initialize w0 and make step length %%%
     X = [ones(size(X,1),1) X]';  % use compact notation
-    w = 0.01*ones(9,1);           % random initial point
-    alpha = 10^-2;               % fixed steplength for all iterations
+    w = 0.008*ones(9,1);              % random initial point
     
     % Initializations 
     iter = 1;
+    max_its = 30000;
+    grad = 1;
     error_log = [];
-    max_its = 3000;
-    grad = ones(9,1);
-    hessian = zeros(9,9);
     
-    N = size(X,1);  %9
+    N = size(X,1);  %8+1 = 9
     P = size(X,2);  %699
-    
-    while norm(grad) > 10^-12 && iter < max_its
-        % compute gradient
-        sig_pow = (X'*w).*(y); % 699x1 matrix of ypXp'w
+        
+    while  norm(grad) > 10^-12 && iter < max_its        
+        sig_pow = (X'*w).*(y); % 699x1 matrix of +ypXp'w
         sigma = 1./(ones(P,1)+exp(sig_pow));
         r = -(sigma).*y; %699x1
-        grad = X*r;
-              
-        % compute hessian
-%         for i = 1:P
-%            hessian = hessian + (exp(y(i)*X(:,1)'*w)/(1+exp(y(i)*X(:,1)'*w))^2)...
-%                *X(:,1)*X(:,1)';
-%         end        
-        w = w - alpha*grad;
-       % w = w - alpha*pinv(hessian)*grad;
-        
-        error = sum(sig_pow(:)<0); %Counting number of misclassifications
-        error_log = cat(1, error_log, error);
+        grad = X*r;          
+   
+        hessian = X*((sigma - sigma.^2).*X');
+        w = w - pinv(hessian)*grad;
         
         % update iteration count
+        if iter > 1
+            error = sum(sig_pow(:)<0); 
+            error_log = cat(1, error_log, error);
+        end
         iter = iter + 1;
     end
-    grad
-    hessian
 end
 
+function [wn,archive] = sqr_margin_newton(X,y)
+    %%% initialize w0 and make step length %%%
+    X = [ones(size(X,1),1) X]';  % use compact notation
+    wn = 0.0875*ones(9,1);              % random initial point
+    
+    % Initializations 
+    cycle = 1;
+    max_cycle = 30000;
+    grad_n = 1;
+    archive = [];
+    
+    N = size(X,1);  %8+1 = 9
+    P = size(X,2);  %699
 
-% function [w,error_log] = sq_margin_newton(X,y)
-%     %%% initialize w0 and make step length %%%
-%     X = [ones(size(X,1),1) X]';  % use compact notation
-%     w = randn(9,1);              % random initial point
-%     alpha = 10^-2;               % fixed steplength for all iterations
-%     
-%     % Initializations 
-%     iter = 1;
-%     error_log = [];
-%     max_its = 30000;
-%     grad = 1;
-%     
-%     N = size(X,1);  %9
-%     P = size(X,2);  %699
-% 
-%     while  norm(grad) > 10^-12 && iter < max_its
-%         % compute gradient
-%         sig_pow = (X'*w).*(y); % 699x1 matrix of ypXp'w
-%         sigma = 1./(ones(P,1)+exp(sig_pow));
-%         r = -(sigma).*y; %699x1
-%         grad = X*r;
-%         % compute hessian
-%         X*X'
-%         sigma
-%         hessian = sigma.*(ones(P,1)-sigma) %9x9
-%         w = w - alpha*pinv(hessian)*grad;
-%         
-%         error = sum(sig_pow(:)<0); %Counting number of misclassifications
-%         error_log = cat(1, error_log, error);
-%         
-%         % update iteration count
-%         iter = iter + 1;
-%     end
-% 
-% end
+    while  norm(grad_n) > 10^-12 && cycle < max_cycle        
+        expr = (X'*wn).*(y); % 699x1 matrix of +ypXp'w
+        check = ones(P,1) - expr;
+        check(check<0)=0    % Replaces negative 1-ypXp'w values with 0
+        grad_n = X*(-2*check.*y)  %(9x699)(699x1) = 9x1     
+   
+        hess = 2*X*X';
+        wn = wn - pinv(hess)*grad_n;
+        
+        % update iteration count
+        if cycle > 1
+            error_n = sum(expr(:)<0); 
+            archive = cat(1, archive, error_n);
+        end
+        cycle = cycle + 1;
+    end
+end
 
 %%% plots everything %%%
-function plot_all(X,y,w,error_log)
-    % plot separator
-    attempts = [1:1:size(error_log,1)];
-    plot(attempts',error_log);
+function plot_all(X,y,w,error_log,archive)
+    % plot softmax optimization
+    figure(1)
+    s = [1:1:size(error_log,1)]';
+    plot (s, error_log);
+    hold on
+    % plot square margin optimization
+    s2 = [1:1:size(archive,1)]';
+    plot(s2, archive);
     
     % clean up plot and add info labels
     set(gcf,'color','w');
     axis square
     box off
-    axis([0 1 0 20])
-    title('Figure 4.8 Reproduction')
-    xlabel('Iteration','Fontsize',14)
+    axis([2 10 26 32])
+    title('Softmax and Square Margin Comparisson')
+    xlabel('Iterations','Fontsize',14)
     ylabel('Misclassifications','Fontsize',14)
     set(get(gca,'YLabel'),'Rotation',90)
+    legend('softmax','squared margin')
 end
 
 %%% loads data %%%
