@@ -33,8 +33,8 @@ function w = softmax_gradient_descent(X,y)
 
     while  norm(grad) > 10^-12 && iter < max_its
         % compute gradient
-        sig_in = (X'*w).*(y); % 100x1 matrix of ypXp'w
-        sigma = 1./(ones(P,1)+exp(sig_in));
+        sig_pow = (X'*w).*(y); % 100x1 matrix of ypXp'w
+        sigma = 1./(ones(P,1)+exp(sig_pow));
         r = -(sigma).*y; %100x1
         grad = X*r;           % YOUR CODE GOES HERE
         w = w - alpha*grad;
