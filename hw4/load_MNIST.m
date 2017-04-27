@@ -15,5 +15,5 @@ function X_new = append_bias(X_old)
 
 %% TODO
 new_col = ones(size(X_old,2),1);    %Nx1 vector of ones
-X_new = cat(2, X_old, new_col);     %Tack on a column of ones to X_old 
+X_new = cat(2, new_col, X_old);     %Tack on a column of ones to start of X_old 
 end
