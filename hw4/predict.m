@@ -5,5 +5,7 @@ function y_pred = predict(W, X)
 % hint: you may find max(A, [], 2) very useful
 
 %% TODO
+A = X*W; %bj+Xp'W
+[argmax, y_pred] = max(A, [], 2); %Extracting biggest value from each row
 
 end
