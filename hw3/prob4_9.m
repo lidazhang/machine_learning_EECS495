@@ -67,8 +67,8 @@ function [wn,archive] = sqr_margin_newton(X,y)
     while  norm(grad_n) > 10^-12 && cycle < max_cycle        
         expr = (X'*wn).*(y); % 699x1 matrix of +ypXp'w
         check = ones(P,1) - expr;
-        check(check<0)=0    % Replaces negative 1-ypXp'w values with 0
-        grad_n = X*(-2*check.*y)  %(9x699)(699x1) = 9x1     
+        check(check<0)=0;    % Replaces negative 1-ypXp'w values with 0
+        grad_n = X*(-2*check.*y);  %(9x699)(699x1) = 9x1     
    
         hess = 2*X*X';
         wn = wn - pinv(hess)*grad_n;
