@@ -1,3 +1,8 @@
+% EECS 495: Homework 4
+% Problem 4.16
+% Modified by Stephanie Chang
+% One vs. All multiclass classification
+
 clear;
 close all;
 clc;
