@@ -11,7 +11,7 @@ C = 10; % Number of classes
 W =  zeros(D, C);
 
 y_converted = convert_to_binary_class(y_train, C);
-for i = 1: num_iter
+for i = 1: num_iter     % Loop 500 times
     grad = gradient_descent(W, X_train, y_converted);
     W = W - lr * grad;
 end
@@ -26,6 +26,15 @@ function y_out = convert_to_binary_class(y_in, C)
 % y_out: N by 10 matrix, each column consists of +1 or -1
 % hint: you can use for loop for this part. And you may need logical indexing
 %% TODO
+n = size(y_in,1);   %60k
+y_out = -ones(n,C); %60K x 10 
+for row = 1:1:C     %Looking at each element in y_in
+    for i = 1:1:C   %Checking classes 1-10
+        if y_in(row) == i
+            y_out(row,i) = 1;        
+        end
+    end
+end
 
 end
 
@@ -34,13 +43,13 @@ function grad = gradient_descent(W, X, y)
 % way to computing gradient on Canvas
 %
 % W: 785 by 10 matrix
-% X: N by 785 matrix
+% X: N by 785 matrix, already in compact notation
 % y: N by 10 matrix
 % grad: gradient of W, 785 by 10 matrix
 % hint: you may find sigmoid() below useful
 %% TODO
     %%% initialize w0 and make step length %%%
-    X = X';            % Flipping X = 785 x N matrix with ones as first row
+    X = X';            % Flipping X = 785 x N matrix with ones as top row
     alpha = 10^-2;     % Fixed steplength for all iterations
     
     % Initializations 
@@ -48,14 +57,10 @@ function grad = gradient_descent(W, X, y)
     max_its = 30000;
     grad = 1;
     
-    N = size(X,1);  %60K
-    P = size(X,2);  %785
-
     while  norm(grad) > 10^-12 && iter < max_its
         % compute gradient of softmax      
-        sig_pow = (X'*W).*(y); % Nx10 matrix of ypXp'w
-        sigma = 1./(ones(P,1)+exp(sig_pow));    % sigma(-ypXp'w)
-        r = -(sigma).*y; %Px1
+        sig_in = -(X'*W).*(y);      % Nx10 matrix of -ypXp'w
+        r = -sigmoid(sig_in).*y; %Px1
         grad = X*r;
         
         %Update W
@@ -64,7 +69,6 @@ function grad = gradient_descent(W, X, y)
         % update iteration count
         iter = iter + 1;
     end
-    iter
 
 end
 
