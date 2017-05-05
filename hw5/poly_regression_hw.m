@@ -1,4 +1,8 @@
 function poly_regression_hw()
+% EECS 495: Homework 5
+% Problem 5.7
+% Modified by Stephanie Chang
+%
 % load data 
 [x,y] = load_data();
 deg = [1,3,5,7,15,20];           % degree polys to try
@@ -29,9 +33,13 @@ plot_mse(mses,deg)
     
 %%%% takes poly features of the input %%%
 function F = poly_features(x,D)
-    %%% YOUR CODE GOES HERE
-    
-    
+    % Building feature vector
+    f_bar = ones(D+1,size(x,1));
+    for i = 2:D+1
+        f_bar(i,:) = x'.^(i-1);
+    end
+    F = f_bar;
+        
 end
 
 %%% plot the D-fit %%%
