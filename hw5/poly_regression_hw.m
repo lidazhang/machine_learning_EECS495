@@ -34,11 +34,8 @@ plot_mse(mses,deg)
 %%%% takes poly features of the input %%%
 function F = poly_features(x,D)
     % Building feature vector
-    f_bar = ones(D+1,size(x,1));
-    for i = 2:D+1
-        f_bar(i,:) = x'.^(i-1);
-    end
-    F = f_bar;
+    x_expand = ones(D+1,1)*x'; % (D+1)xP, x1s all in first col
+    F = x_expand.^(linspace(0,D,D+1)'); 
         
 end
 
