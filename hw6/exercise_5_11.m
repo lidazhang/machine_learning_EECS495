@@ -1,6 +1,11 @@
 clear;
 close all;
 clc;
+%------------------------------------------------------------------------
+% EECS 495: Homework 6
+% Modified by Stephanie Chang
+% Problem 5.11
+%------------------------------------------------------------------------
 
 [X, y] = read_data('wavy_data.csv');
 num_fold = 3; num_degree = 8;

@@ -16,6 +16,25 @@ function F = fourier_basis(X, D)
 % 	find "size, reshape, ones, cos, sin" useful
 
 %% TODO
+P = size(X,2); %30
+bias = ones(1,P); %first row all ones
+deg = repmat(linspace(1,D,D)',1,P); %DxP 
+fin = repmat(2*pi*X,D,1).*deg; %DxP
+fcos = cos(fin);
+fsin = sin(fin);
+f = ones(size([fcos;fsin])); %(2D,P)
+f = (1:2:end,:) = fcos; %Replacing odd rows with cosine
+f = (2:2:end,:) = fsin; %Replacing even rows with sine
+
+% for i=1:2*D
+%     if mod(i,2) == 1        %Odd 
+%         f = fcos(i,:); 
+%     else                    %Even
+%         f = fsin(i,:);
+%     end
+% end
+
+F = cat(1,bias,f); %Adding bias to top row
 
 assert(size(F, 1)==2*D+1, 'degree incorrect');
 assert(size(F, 2)==size(X, 2), 'number of data points incorrect');

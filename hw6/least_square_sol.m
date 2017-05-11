@@ -16,4 +16,8 @@ function w = least_square_sol(F, y)
 
 %% TODO
 
+r_mx = sum(F*y,1); %(2D+1,1)
+l_mx = F*F'; %(2D+1, 2D+1)
+w = pinv(l_mx)*r_mx; %(2D+1,1)
+
 assert(length(w) == size(F, 1), 'length of w incorrect');

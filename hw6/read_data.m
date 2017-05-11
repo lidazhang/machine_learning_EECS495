@@ -17,5 +17,12 @@ function [X, y] = read_data(filename)
 
 %% TODO
 
+data = csvread(filename);
+X_tmp = data(:,1);
+y_tmp = data(:,2);
+
+X = X_tmp';
+y = y_tmp;
+
 assert(size(X, 2) == size(data, 1), 'size of X incorrect');
 assert(size(y, 1) == size(data, 1), 'size of y incorrect');
