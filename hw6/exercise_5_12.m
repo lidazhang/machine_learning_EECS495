@@ -2,6 +2,12 @@ clear;
 close all;
 clc;
 
+%------------------------------------------------------------------------
+% EECS 495: Homework 6
+% Modified by Stephanie Chang
+% Problem 5.12
+%------------------------------------------------------------------------
+
 [X, y] = read_data('galileo_ramp_data.csv');
 num_fold = 6; num_degree = 6;
 folds = random_split(length(y), num_fold);

@@ -21,6 +21,8 @@ K = size(folds,1);
 N = size(folds,2); %P/K = 30/3 = 10
 X_tmp = ones(K,N);
 y_tmp = ones(N,K);
+X_train = [];
+y_train = [];
 
 for i = 1:K
     if (i == fold_id)   %Validation set
@@ -38,9 +40,14 @@ for i = 1:K
     end
 end
 
-X_train = cat(2,X_tmp(2,:), X_tmp(3,:)); 
-y_train = cat(1,y_tmp(:,2), y_tmp(:,3));
 X_val = X_tmp(fold_id,:);
 y_val = y_tmp(:,fold_id);
+
+for l = 1:K 
+    if (l ~= fold_id)
+        X_train = cat(2,X_train, X_tmp(l,:)); 
+        y_train = cat(1,y_train, y_tmp(:,l)); 
+    end
+end
 
 assert(length([y_val; y_train]) == length(y), 'Split incorrect');
