@@ -17,4 +17,6 @@ function mse = mean_square_error(w, F, y)
 
 %% TODO
 
+e = (F'*w - y).^2;
+mse = mean(e);
 

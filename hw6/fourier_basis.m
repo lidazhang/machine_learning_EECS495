@@ -23,16 +23,8 @@ fin = repmat(2*pi*X,D,1).*deg; %DxP
 fcos = cos(fin);
 fsin = sin(fin);
 f = ones(size([fcos;fsin])); %(2D,P)
-f = (1:2:end,:) = fcos; %Replacing odd rows with cosine
-f = (2:2:end,:) = fsin; %Replacing even rows with sine
-
-% for i=1:2*D
-%     if mod(i,2) == 1        %Odd 
-%         f = fcos(i,:); 
-%     else                    %Even
-%         f = fsin(i,:);
-%     end
-% end
+f(1:2:end,:) = fcos; %Replacing odd rows with cosine
+f(2:2:end,:) = fsin; %Replacing even rows with sine
 
 F = cat(1,bias,f); %Adding bias to top row
 

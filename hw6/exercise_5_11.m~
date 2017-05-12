@@ -38,24 +38,23 @@ function plot_data(X_train,y_train,X_val,y_val, best_degree, w_best)
     hold on
     scatter(X_train,y_train,'fill');
     scatter(X_val,y_val,'fill');
-    str = sprintf('Best Fit Model using Fourier Basis, D = %d', best_degree);
-    title(str);
+    title('Best Fit Model');
     xlabel('x');
     ylabel('y');
     
     %Plotting best model
-    xstore = [];
+    xstore = linspace(0,1,0.01);
     fstore = [];
 
-    wx2 = reshape(w_best(2:end,:),2,[])';  %W = [w2,w3; w4,w5; ...]
+    wx2 = reshape(w_best(2:end,:),2,[])'  %W = [w2,w3; w4,w5; ...]
     for x = 0:0.01:1
         col = 2*pi*x*ones(size(wx2,1),1).*linspace(1,best_degree,best_degree)';
-        trig = [cos(col), sin(col)];
+        trig = [cos(col), sin(col)]
         f = w_best(1,1)+sum(sum(trig.*wx2,2),1);  
-        fstore = cat(2,fstore,f);
-        xstore = cat(2,xstore,x);
+        fstore = cat(fstore,f];
     end
-    plot(xstore, fstore);
+    
+    plot(xstore, fstore)
 end
 
 
