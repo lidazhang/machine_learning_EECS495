@@ -18,7 +18,7 @@ function F = poly_basis(X, D)
 %% TODO
 
 % Building feature vector
-x_expand = ones(D+1,1)*x'; % (D+1)xP, x1s all in first col
+x_expand = ones(D+1,1)*X; % (D+1)xP, x1s all in first col
 F = x_expand.^(linspace(0,D,D+1)'); 
 
 assert(size(F, 1)==D+1, 'degree incorrect');
