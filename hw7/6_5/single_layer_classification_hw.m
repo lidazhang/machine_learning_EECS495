@@ -1,6 +1,9 @@
+% EECS 495: Homework 7
+% Problem 6.5
+% 
+% Modified by Stephanie Chang
+
 function single_layer_classification_hw()
-
-
 % This file is associated with the book
 % "Machine Learning Refined", Cambridge University Press, 2016.
 % by Jeremy Watt, Reza Borhani, and Aggelos Katsaggelos.
@@ -24,9 +27,17 @@ for j = 1:num_its
 end
 
 %%%%%%%%%%%% subfunctions %%%%%%%%%%%%%
-
 %%% gradient descent for single layer tanh nn %%%
+% X = 2x100
+% y = 100x1
 function [b,w,c,V] = tanh_softmax(X,y,M)
+    %Initializations
+    D = size(X,1); %2
+    P = size(X,2); %100
+    b = 0;
+    w = 0.01 * randn(M,1); %4x1
+    c = zeros(M,1); %4x1
+    V = 0.01 * randn(D,M); %2x4
     
     % stoppers
     max_its = 10000;
@@ -36,23 +47,30 @@ function [b,w,c,V] = tanh_softmax(X,y,M)
     %%% main %%%
     while count <= max_its && norm(grad) > 10^-5   
        
-        F = obj(c,V,X);
+        F = obj(c,V,X); %4x100
         
-        % calculate gradients
-% --->  grad_b = 
-% --->  grad_w = 
-% --->  grad_c = 
-% --->  grad_V = 
+        % calculate gradients      
+        q = sigmoid(-(b + y.*sum(w.*F,1)')); %100x1
+        tn = tanh(repmat(c',[P,1]) + X'*V); %(100x2)(2x4) = 100x4
+        sn = sech(repmat(c',[P,1]) + X'*V).^2; %100x4
+        
+        grad_b = -ones(1,P)*(q.*y); %1x1
+        grad_w = (-ones(1,P)*(q.*tn.*y))'; %1x4
+        grad_c = (-ones(1,P)*(q.*(sn.*w').*y))'; %1x4
+        grad_V = -X*(q.*(sn.*w').*y); %2x4
         
         % determine steplength 
 %       alpha = adaptive_step();
         alpha = 10^-2;
         
         % take gradient steps 
-        b = b - alpha*grad_b;
-        w = w - alpha*grad_w;
-        c = c - alpha*grad_c;   
-        V = V - alpha*grad_V;
+        b = b - alpha*grad_b; 
+        w = w - alpha*grad_w; 
+        c = c - alpha*grad_c;  
+        V = V - alpha*grad_V; 
+        
+%         % Update gradient variable for norm stopping condition
+%         grad = [grad_b, grad_w, grad_c, grad_V(1,:), grad_V(2,:)];
         
         % update stoppers 
         count = count + 1;   
@@ -86,12 +104,11 @@ function y = sigmoid(z)
     y = 1./(1+exp(-z));
 end
 
-function F = obj(z,H,A)
-    F = zeros(M,size(A,2));
+function F = obj(z,H,A) %activation function tanh(.), zHA = cVX
+    F = zeros(M,size(A,2)); %4x100
     for p = 1:size(A,2)
         F(:,p) = tanh(z + H'*A(:,p));
     end    
-    
 end
 
 % load data
@@ -99,7 +116,6 @@ function [A,b] = load_data(num_its)
     data = csvread('genreg_data.csv');
     A = data(:,1:end - 1);
     b = data(:,end);
-
    
     for j = 1:num_its
         subplot(1,num_its,j)
@@ -142,6 +158,8 @@ function plot_separator(b,w,c,V,X,y)
     axis([0 1 0 1])
     
     % graph info labels
+    str = sprintf('Grad Descent with Single Hidden Layer Bases, M = %d', M);
+    title(str)
     xlabel('x_1','Fontsize',16)
     ylabel('x_2      ','Fontsize',16)
     set(get(gca,'YLabel'),'Rotation',0)
