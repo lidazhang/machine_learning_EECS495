@@ -1,5 +1,11 @@
 function PCA_demo()
-
+% EECS 495: Homework 8
+% Problem 9.2
+% 
+% Modified by Stephanie Chang
+% To view the results for PART A, uncomment line 22
+% To view the results for PART B, uncomment line 23
+%-------------------------------------------------------------------------
 % This file is associated with the book
 % "Machine Learning Refined", Cambridge University Press, 2016.
 % by Jeremy Watt, Reza Borhani, and Aggelos Katsaggelos.
@@ -14,21 +20,36 @@ X = X';
 K = 1;  
 
 % run PCA 
-[C, W] = your_PCA(X, K);
+%[C, W] = PCA_svd(X, K);
+[C, W] = PCA_opt(X, K);
 
 % plot_results
 plot_results(X, C)
 
 
-function [C, W] = your_PCA(X, K)
-
-% ---->  YOUR CODE GOES HERE    
+function [C, W] = PCA_svd(X, K)
+% X = 2x150 = NxP
+% K = 1
+% ---->  YOUR CODE GOES HERE 
     
+    [U,S,V] = svd(X); %U = 2x2, S = 2x150, V = 150x150
+    C = U(:,K)*S(K,K) %2x1
+    W = V(:,K)'; %1x150
+   
 end
 
 
+function [C, W] = PCA_opt(X, K)
+% X = 2x150 = NxP
+% K = 1
+% ---->  YOUR CODE GOES HERE 
+    
+   
+end
+
 function plot_results(X, C)
-        
+    figure
+    
     % Print points and pcs
     subplot(1,2,1)
     for j = 1:n
