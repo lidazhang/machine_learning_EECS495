@@ -3,7 +3,8 @@ function K_means_demo()
 % Problem 9.1
 %
 % Modified by Stephanie Chang
-% To view PARTS A & B, uncomment the appropriate C0 declaration
+% To view PARTS A & B, uncomment the appropriate C0 declaration 
+% (line 16 or 17)
 %--------------------------------------------------------------------------
 % This file is associated with the book
 % "Machine Learning Refined", Cambridge University Press, 2016.
